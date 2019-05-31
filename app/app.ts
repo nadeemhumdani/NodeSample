@@ -10,12 +10,8 @@ const app: express.Application = express();
 //const swaggerDocument = require('./swagger.json');
 
 app.get('/', (req, res) => {
-  res.send('Hello World!!!ß');
+  res.send('Hello World!!!');
 });
-
-// app.use((req, res, next) => {
-
-// })
 
 app.all('/api', (reg, res, next) => {
   console.log("all api")
@@ -28,13 +24,27 @@ app.get('/api', async (req, res)  => {
   //console.log("request received...")
   var setting = await fetchConnectionSetting(req.query['appid'])
 
-  if ((setting as ApplicationException)){
-    //res.statusCode = 404
-    res.status(404).send(setting)
-  } else {
-    res.send(setting);
+  if (failed(setting)){
+    res.statusCode = 404
   }
+
+  res.send(setting)
+
+  // if ((setting as ApplicationException)){
+  //   console.log("in ApplicationException")
+  //   //res.statusCode = 404
+  //   //res.status(404).send(setting)
+  //   res.send(setting);
+  // } else {
+  //   res.send(setting);
+  // }
 });
+
+const failed = (result: any): result is ApplicationException => { return true}
+
+// const worked = (res: express.Response) => {
+
+// }
 
 app.listen(3000, () => {
   console.log('Running Confirguration Manager on port 3000...');
