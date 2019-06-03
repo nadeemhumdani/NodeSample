@@ -21,7 +21,7 @@ app.all('/api', (reg, res, next) => {
 app.get('/api', async (req, res)  => {
 
   console.log("get api")
-  //console.log("request received...")
+  console.log("request received for appid:" + req.query['appid'])
   var setting = await fetchConnectionSetting(req.query['appid'])
 
   if (failed(setting)){
@@ -41,10 +41,6 @@ app.get('/api', async (req, res)  => {
 });
 
 const failed = (result: any): result is ApplicationException => { return true}
-
-// const worked = (res: express.Response) => {
-
-// }
 
 app.listen(3000, () => {
   console.log('Running Confirguration Manager on port 3000...');
