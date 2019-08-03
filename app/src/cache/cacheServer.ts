@@ -1,4 +1,5 @@
 import redis = require('redis');
+import { Request, Response } from "express";
 
 var client : redis.RedisClient | undefined = undefined
 
@@ -13,11 +14,6 @@ export const Connect = () => {
     client.on('error', (err) => { 
         console.error('Redis error:', err); 
     });
-}
-
-export const Set = (key: string , data : any) => {
-    console.log('Redis SET data...', data)
-    client!.set(key, data)
 }
 
 export const Exists = (key: string) : Promise<boolean> => {
@@ -49,3 +45,19 @@ export const Get = (key: string) : Promise<any> => {
     )
 }
 
+export const Set = (key: string , data : any) => {
+    console.log('Redis SET data...', data)
+    client!.set(key, data)
+}
+
+export const Clear = async (req: Request, res: Response) : Promise<void> => {
+
+    return new Promise<any>(
+        (resolve, reject) => {
+            client!.flushdb((err, flushed) => {
+                console.log('Redis clearing data:',flushed, err)
+                res.send("Cache Cleared")
+            })
+        }
+    )
+}

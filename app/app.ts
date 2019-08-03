@@ -38,6 +38,7 @@ app.get('/api', async (req, res)  => {
 });
 
 app.get('/userlist', users.GetUsers)
+app.get('/clearcache', cache.Clear)
 
 const failed = (result: any): result is ApplicationException => { return true}
 
