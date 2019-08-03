@@ -18,8 +18,7 @@ export const GetUsers = async (req: Request, res: Response) : Promise<void> => {
 
 const fetchUsers = async (key: string) : Promise<any> => {
 
-    //let dat = await fetch.default("https://jsonplaceholder.typicode.com/todos/30")
-
+    //"https://jsonplaceholder.typicode.com/todos/30"
     let dat = await fetch.default("https://jsonplaceholder.typicode.com/todos/" + key)
     return await dat.json()
 
