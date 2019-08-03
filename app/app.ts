@@ -1,7 +1,8 @@
 // lib/app.ts
 import express = require('express');
 import {fetchConnectionSetting, ApplicationException} from './src/ConfigManager'
-
+import * as cache from './src/cache/cacheServer'
+import * as users from './src/api/controllers/users'
 
 // Create a new express application instance
 const app: express.Application = express();
@@ -9,11 +10,7 @@ const app: express.Application = express();
 //const swaggerUi = require('swagger-ui-express');
 //const swaggerDocument = require('./swagger.json');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!!!');
-});
-
-app.all('/api', (reg, res, next) => {
+app.all('/', (reg, res, next) => {
   console.log("all api")
   next()
 })
@@ -21,7 +18,7 @@ app.all('/api', (reg, res, next) => {
 app.get('/api', async (req, res)  => {
 
   console.log("get api")
-  console.log("request received for appid:" + req.query['appid'])
+  console.log("request received for appid:", req.query['appid'])
   var setting = await fetchConnectionSetting(req.query['appid'])
 
   if (failed(setting)){
@@ -40,8 +37,11 @@ app.get('/api', async (req, res)  => {
   // }
 });
 
+app.get('/userlist', users.GetUsers)
+
 const failed = (result: any): result is ApplicationException => { return true}
 
 app.listen(3000, () => {
+  cache.Connect();
   console.log('Running Confirguration Manager on port 3000...');
 });
